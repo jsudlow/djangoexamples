@@ -1,22 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from django.template import RequestContext, loader
+
 # Create your views here.
 
 from swtrivia.models import Question
 def index(request):
   question_list = Question.objects.all()
-  template = loader.get_template('swtrivia/index.html')
-  context = RequestContext(request, {
-    'latest_question_list': question_list,
-    })
-  
-  return HttpResponse(template.render(context))
+  context = {'latest_question_list':question_list}
+
+  return render(request, 'swtrivia/index.html',context)
 
 
 def question_detail(request,question_id):
-  response = "Good luck on the star wars quiz"
-  return HttpResponse(response)
+  question = get_object_or_404(Question,pk=question_id)
+  return render(request, 'swtrivia/detail.html', {'question': question})
+  
 
 def question_results(request,question_id):
   return HttpResponse("Your trying to answer question %s" % question_id)
