@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 
+from pprint import pprint
 # Create your views here.
 
 from swtrivia.models import Question
@@ -17,4 +18,15 @@ def question_detail(request,question_id):
   
 
 def question_results(request,question_id):
-  return HttpResponse("Your trying to answer question %s" % question_id)
+  choice = int(request.POST['choice'])
+  question = get_object_or_404(Question, pk=question_id)
+  c = question.answer_set.filter(is_correct=True)
+  response = ''
+
+  if c[0].id == choice:
+    response += "Correct"
+  else:
+    response += "Incorrect"
+
+
+  return HttpResponse("You Answered %s" % response)

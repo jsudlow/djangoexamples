@@ -1,6 +1,12 @@
 <h1>{{ question.question_text }}</h1>
-<ul>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'swtrivia:question_results' question.id %}" method="post">
+{% csrf_token %}
 {% for choice in question.answer_set.all %}
-    <li>{{ choice.question_text }}</li>
+    <input type="radio" name="choice" id="{{ forloop.counter }}" value="{{ choice.id }}" />
+    <label for="choice{{ forloop.counter }}">{{ choice.question_text }}</label><br />
 {% endfor %}
-</ul>
+<input type="submit" value="Confirm Answer" />
+</form>
